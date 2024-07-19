@@ -1,5 +1,5 @@
 const optionsData = {
-	"Non-Retirement": [
+	"Taxable Investment": [
 		{ text: "Individual", hideBeneficiary: true, bypassProbate: false },
 		{ text: "Joint Tenants with Rights of Survivorship", hideBeneficiary: true, bypassProbate: true },
 		{ text: "Joint Tenants in Common", hideBeneficiary: true, bypassProbate: false },
@@ -10,10 +10,10 @@ const optionsData = {
 		{ text: "Joint Tenants in Entirety – Transfer on Death (TOD)", bypassProbate: true },
 	],
 	Retirement: [{ text: "Traditional IRA" }, { text: "Roth IRA" }, { text: "Rollover IRA" }, { text: "SEP IRA" }, { text: "SIMPLE IRA" }, { text: "IRA BDA" }, { text: "Roth IRA BDA" }, { text: "401(k) Plan" }, { text: "Solo 401(k)/Individual 401(k)" }, { text: "Profit-Sharing Plan" }, { text: "Defined Benefit Plan" }, { text: "403(b) Plan" }, { text: "457 Plan" }, { text: "Thrift Savings Plan (TSP)" }],
-	Custodial: [{ text: "Uniform Gifts to Minors Act (UGMA)" }, { text: "Uniform Transfers to Minors Act (UTMA)" }, { text: "529" }],
-	Entity: [{ text: "Trust Under Agreement" }, { text: "Trust Under Will" }, { text: "Corporation" }, { text: "Limited Liability Company (LLC)" }, { text: "Non-Prototype" }],
+	"Accounts for Minors": [{ text: "Uniform Gifts to Minors Act (UGMA)" }, { text: "Uniform Transfers to Minors Act (UTMA)" }, { text: "529" }],
+	"Business & Trust": [{ text: "Trust Under Agreement" }, { text: "Trust Under Will" }, { text: "Corporation" }, { text: "Limited Liability Company (LLC)" }, { text: "Non-Prototype" }],
 	Insurance: [{ text: "Life Insurance" }, { text: "Annuity" }],
-	"Legal Document": [{ text: "Last Will and Testament" }, { text: "Trust Agreement" }, { text: "Durable Power of Attorney" }, { text: "Healthcare Power of Attorney" }, { text: "Tax Returns" }],
+	"Important Legal Document": [{ text: "Last Will and Testament" }, { text: "Trust Agreement" }, { text: "Durable Power of Attorney" }, { text: "Healthcare Power of Attorney" }, { text: "Tax Returns" }],
 };
 
 // Function to add "Other" option to all account types
@@ -50,12 +50,12 @@ function getBypassProbate(accountType, registrationType, hasBeneficiary) {
 		case "Retirement":
 		case "Insurance":
 			return hasBeneficiary;
-		case "Custodial":
-		case "Entity":
+		case "Accounts for Minors":
+		case "Business & Trust":
 			return true;
-		case "Legal Document":
+		case "Important Legal Document":
 			return "N/A";
-		case "Non-Retirement":
+		case "Taxable Investment":
 			return option.bypassProbate || false;
 		default:
 			return false;
@@ -87,11 +87,11 @@ const baseFields = {
 			class: "half-width",
 		},
 		{
-            name: "accountNumber",
-            placeholder: "Number Placeholder",
-            class: "half-width",
+			name: "accountNumber",
+			placeholder: "Number Placeholder",
+			class: "half-width",
 			type: "text",
-            maskInput: true
+			maskInput: true,
 		},
 		{
 			name: "advisorName",
@@ -179,8 +179,8 @@ legalDocumentFields.fields[8].class = "hidden"; // Hide beneficiaryLabel
 legalDocumentFields.fields[9].class = "hidden"; // Hide beneficiaryYN
 legalDocumentFields.fields[10].class = "hidden"; // Hide beneficiaryName
 legalDocumentFields.fields[11].class = "hidden"; // Hide beneficiaryPhoneNumber
-legalDocumentFields.uiText.rowLabel = "Legal Document";
-legalDocumentFields.fields.find(f => f.name === "accountNumber").maskInput = false;
+legalDocumentFields.uiText.rowLabel = "Important Legal Document";
+legalDocumentFields.fields.find((f) => f.name === "accountNumber").maskInput = false;
 
 const widgetSettingsMapping = {
 	account: accountFields,

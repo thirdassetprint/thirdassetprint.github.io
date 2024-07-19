@@ -167,9 +167,6 @@ function getFieldsToUse(accountLabel) {
 	return widgetSettingsMapping[accountLabel.toLowerCase()] || widgetSettingsMapping["account"];
 }
 
-
-
-
 function handleRadioChange(radio, rowDiv, elements, fieldsToUse) {
 	const isVisible = radio.value === "Yes";
 	const fields = ["beneficiaryName", "beneficiaryPhoneNumber"].map((name) => rowDiv.querySelector(`input[name='${name}']`));
@@ -274,18 +271,18 @@ function createLabelField(field) {
 }
 
 function createInputField(field) {
-    const input = document.createElement("input");
-    input.type = field.type || "text";
-    input.name = field.name;
-    input.placeholder = field.placeholder;
-    input.required = allFieldsRequired;
-    input.className = field.class;
-    if (field.pattern) input.pattern = field.pattern;
-    if (field.title) input.title = field.title;
+	const input = document.createElement("input");
+	input.type = field.type || "text";
+	input.name = field.name;
+	input.placeholder = field.placeholder;
+	input.required = allFieldsRequired;
+	input.className = field.class;
+	if (field.pattern) input.pattern = field.pattern;
+	if (field.title) input.title = field.title;
 
-    if (field.name === "accountNumber" && field.maskInput) {
-        handleAccountNumberInput(input);
-    }
+	if (field.name === "accountNumber" && field.maskInput) {
+		handleAccountNumberInput(input);
+	}
 
 	if (field.name === "value") {
 		input.addEventListener("input", () => (input.value = input.value.replace(/[^0-9.]/g, "")));
@@ -308,33 +305,33 @@ function createInputField(field) {
 }
 
 function handleAccountNumberInput(input) {
-    let fullNumber = '';
+	let fullNumber = "";
 
-    input.addEventListener('input', function(e) {
-        // Update the full number
-        fullNumber = this.value;
-        
-        // Mask all but last 4 characters
-        if (fullNumber.length > 4) {
-            this.value = '*'.repeat(fullNumber.length - 4) + fullNumber.slice(-4);
-        } else {
-            this.value = fullNumber;
-        }
-    });
+	input.addEventListener("input", function (e) {
+		// Update the full number
+		fullNumber = this.value;
 
-    input.addEventListener('focus', function() {
-        // Show full number when focused
-        this.value = fullNumber;
-    });
+		// Mask all but last 4 characters
+		if (fullNumber.length > 4) {
+			this.value = "*".repeat(fullNumber.length - 4) + fullNumber.slice(-4);
+		} else {
+			this.value = fullNumber;
+		}
+	});
 
-    input.addEventListener('blur', function() {
-        // Mask again when blurred
-        if (fullNumber.length > 4) {
-            this.value = '*'.repeat(fullNumber.length - 4) + fullNumber.slice(-4);
-        } else {
-            this.value = fullNumber;
-        }
-    });
+	input.addEventListener("focus", function () {
+		// Show full number when focused
+		this.value = fullNumber;
+	});
+
+	input.addEventListener("blur", function () {
+		// Mask again when blurred
+		if (fullNumber.length > 4) {
+			this.value = "*".repeat(fullNumber.length - 4) + fullNumber.slice(-4);
+		} else {
+			this.value = fullNumber;
+		}
+	});
 }
 
 function createSelectField(field, rowDiv, accountLabel) {
@@ -458,7 +455,7 @@ function createRowContent(fieldsToUse, accountLabel, elements) {
 
 	rowDiv.appendChild(rowNumber);
 
-	if (accountLabel === "Entity") {
+	if (accountLabel === "Business & Trust Accounts") {
 		fieldsToUse.fields = fieldsToUse.fields.filter((field) => !["beneficiaryLabel", "beneficiaryYN", "beneficiaryName", "beneficiaryPhoneNumber"].includes(field.name));
 	}
 
