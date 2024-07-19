@@ -163,22 +163,27 @@ insuranceFields.uiText.rowLabel = "Policy";
 
 // Customize for legalDocumentFields
 const legalDocumentFields = JSON.parse(JSON.stringify(baseFields));
-legalDocumentFields.fields[2].placeholder = "Document Location";
-legalDocumentFields.fields[3].placeholder = "Attorney/CPA Name";
-legalDocumentFields.fields[4].placeholder = "Attorney/CPA Phone Number";
-legalDocumentFields.fields[4].type = "tel";
-legalDocumentFields.fields[4].pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}";
-legalDocumentFields.fields[4].title = "XXX-XXX-XXXX";
-legalDocumentFields.fields[5].placeholder = "Executor/Trustee Name";
-legalDocumentFields.fields[6].placeholder = "Executor/Trustee Phone Number";
-legalDocumentFields.fields[6].type = "tel";
-legalDocumentFields.fields[6].pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}";
-legalDocumentFields.fields[6].title = "XXX-XXX-XXXX";
-legalDocumentFields.fields[7].class = "hidden"; // Hide the value field
-legalDocumentFields.fields[8].class = "hidden"; // Hide beneficiaryLabel
-legalDocumentFields.fields[9].class = "hidden"; // Hide beneficiaryYN
-legalDocumentFields.fields[10].class = "hidden"; // Hide beneficiaryName
-legalDocumentFields.fields[11].class = "hidden"; // Hide beneficiaryPhoneNumber
+legalDocumentFields.fields.splice(2, 0, {
+  name: "documentName",
+  placeholder: "Document Name",
+  class: "half-width",
+});
+legalDocumentFields.fields[3].placeholder = "Document Location";
+legalDocumentFields.fields[4].placeholder = "Attorney/CPA Name";
+legalDocumentFields.fields[5].placeholder = "Attorney/CPA Phone Number";
+legalDocumentFields.fields[5].type = "tel";
+legalDocumentFields.fields[5].pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}";
+legalDocumentFields.fields[5].title = "XXX-XXX-XXXX";
+legalDocumentFields.fields[6].placeholder = "Executor/Trustee Name";
+legalDocumentFields.fields[7].placeholder = "Executor/Trustee Phone Number";
+legalDocumentFields.fields[7].type = "tel";
+legalDocumentFields.fields[7].pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}";
+legalDocumentFields.fields[7].title = "XXX-XXX-XXXX";
+legalDocumentFields.fields[8].class = "hidden"; // Hide the value field
+legalDocumentFields.fields[9].class = "hidden"; // Hide beneficiaryLabel
+legalDocumentFields.fields[10].class = "hidden"; // Hide beneficiaryYN
+legalDocumentFields.fields[11].class = "hidden"; // Hide beneficiaryName
+legalDocumentFields.fields[12].class = "hidden"; // Hide beneficiaryPhoneNumber
 legalDocumentFields.uiText.rowLabel = "Important Legal Document";
 legalDocumentFields.fields.find((f) => f.name === "accountNumber").maskInput = false;
 

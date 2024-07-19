@@ -673,17 +673,26 @@ JFCustomWidget.subscribe("submit", function () {
 			if (registrationType || otherRegistration) {
 				rowData["registration"] = otherRegistration || registrationType;
 
-				if (beneficiaryYNChecked && beneficiaryYNValue === "No") {
-					rowData["beneficiaryName"] = "N/A";
-					rowData["beneficiaryPhoneNumber"] = "N/A";
-				} else if (!beneficiaryYNChecked) {
-					rowData["beneficiaryYN"] = "N/A";
-					rowData["beneficiaryName"] = "N/A";
-					rowData["beneficiaryPhoneNumber"] = "N/A";
-				}
+				if (accountType === "Important Legal Document") {
+					// For legal documents, use documentName as the title if available
+					if (rowData["documentName"]) {
+						rowData["title"] = rowData["documentName"];
+						delete rowData["documentName"]; // Remove the separate documentName field
+					}
+					rowData["bypassProbate"] = "N/A";
+				} else {
+					if (beneficiaryYNChecked && beneficiaryYNValue === "No") {
+						rowData["beneficiaryName"] = "N/A";
+						rowData["beneficiaryPhoneNumber"] = "N/A";
+					} else if (!beneficiaryYNChecked) {
+						rowData["beneficiaryYN"] = "N/A";
+						rowData["beneficiaryName"] = "N/A";
+						rowData["beneficiaryPhoneNumber"] = "N/A";
+					}
 
-				const hasBeneficiary = beneficiaryYNValue === "Yes";
-				rowData["bypassProbate"] = getBypassProbate(accountType, rowData["registration"], hasBeneficiary);
+					const hasBeneficiary = beneficiaryYNValue === "Yes";
+					rowData["bypassProbate"] = getBypassProbate(accountType, rowData["registration"], hasBeneficiary);
+				}
 
 				// Remove any empty fields
 				Object.keys(rowData).forEach((key) => {
