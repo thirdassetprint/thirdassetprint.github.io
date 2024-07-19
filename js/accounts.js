@@ -274,18 +274,18 @@ function createLabelField(field) {
 }
 
 function createInputField(field) {
-	const input = document.createElement("input");
-	input.type = field.type || "text";
-	input.name = field.name;
-	input.placeholder = field.placeholder;
-	input.required = allFieldsRequired;
-	input.className = field.class;
-	if (field.pattern) input.pattern = field.pattern;
-	if (field.title) input.title = field.title;
+    const input = document.createElement("input");
+    input.type = field.type || "text";
+    input.name = field.name;
+    input.placeholder = field.placeholder;
+    input.required = allFieldsRequired;
+    input.className = field.class;
+    if (field.pattern) input.pattern = field.pattern;
+    if (field.title) input.title = field.title;
 
-	if (field.name === "accountNumber") {
-		handleAccountNumberInput(input);
-	}
+    if (field.name === "accountNumber" && field.maskInput) {
+        handleAccountNumberInput(input);
+    }
 
 	if (field.name === "value") {
 		input.addEventListener("input", () => (input.value = input.value.replace(/[^0-9.]/g, "")));

@@ -91,6 +91,7 @@ const baseFields = {
             placeholder: "Number Placeholder",
             class: "half-width",
 			type: "text",
+            maskInput: true
 		},
 		{
 			name: "advisorName",
@@ -179,6 +180,7 @@ legalDocumentFields.fields[9].class = "hidden"; // Hide beneficiaryYN
 legalDocumentFields.fields[10].class = "hidden"; // Hide beneficiaryName
 legalDocumentFields.fields[11].class = "hidden"; // Hide beneficiaryPhoneNumber
 legalDocumentFields.uiText.rowLabel = "Legal Document";
+legalDocumentFields.fields.find(f => f.name === "accountNumber").maskInput = false;
 
 const widgetSettingsMapping = {
 	account: accountFields,
