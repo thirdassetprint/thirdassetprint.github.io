@@ -13,7 +13,7 @@ const optionsData = {
 	"Accounts for Minors": [{ text: "Uniform Gifts to Minors Act (UGMA)" }, { text: "Uniform Transfers to Minors Act (UTMA)" }, { text: "529" }],
 	"Business & Trust": [{ text: "Trust Under Agreement" }, { text: "Trust Under Will" }, { text: "Corporation" }, { text: "Limited Liability Company (LLC)" }, { text: "Non-Prototype" }],
 	Insurance: [{ text: "Life Insurance" }, { text: "Annuity" }],
-	"Important Legal Document": [{ text: "Last Will and Testament" }, { text: "Trust Agreement" }, { text: "Durable Power of Attorney" }, { text: "Healthcare Power of Attorney" }, { text: "Tax Returns" }],
+	"Important Legal Documents": [{ text: "Last Will and Testament" }, { text: "Trust Agreement" }, { text: "Durable Power of Attorney" }, { text: "Healthcare Power of Attorney" }, { text: "Tax Returns" }],
 };
 
 // Function to add "Other" option to all account types
@@ -53,7 +53,7 @@ function getBypassProbate(accountType, registrationType, hasBeneficiary) {
 		case "Accounts for Minors":
 		case "Business & Trust":
 			return true;
-		case "Important Legal Document":
+		case "Important Legal Documents":
 			return "N/A";
 		case "Taxable Investment":
 			return option.bypassProbate || false;

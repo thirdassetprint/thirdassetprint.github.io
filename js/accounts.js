@@ -673,7 +673,7 @@ JFCustomWidget.subscribe("submit", function () {
 			if (registrationType || otherRegistration) {
 				rowData["registration"] = otherRegistration || registrationType;
 
-				if (accountType === "Important Legal Document") {
+				if (accountType === "Important Legal Documents") {
 					// For legal documents, use documentName as the title if available
 					if (rowData["documentName"]) {
 						rowData["title"] = rowData["documentName"];
