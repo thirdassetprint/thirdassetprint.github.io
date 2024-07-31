@@ -143,19 +143,8 @@ const baseFields = {
 	},
 };
 
-// Add the new checkbox field for Taxable Investment and Retirement accounts
-const sameAsNameField = {
-	name: "sameAsName",
-	type: "checkbox",
-	text: "Account Title is the same as First Name Last Name",
-	class: "full-width",
-  };
-  
-  
-
 // Customize for accountFields
 const accountFields = JSON.parse(JSON.stringify(baseFields));
-accountFields.fields.splice(2, 0, sameAsNameField);
 accountFields.fields[2].placeholder = "Account Title";
 accountFields.fields[3].placeholder = "Firm Name";
 accountFields.fields[4].placeholder = "Account Number";
