@@ -78,6 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 	function setupWidget(container, elements, config, data) {
+		console.log("Setting up widget with config:", config, "and data:", data);
+
 		// Clean up previous event handlers to prevent multiple bindings
 		elements.addButton.off("click").click(function () {
 			addRow(elements, config.fieldsToUse, config.accountLabel);
@@ -187,6 +189,8 @@ function attachEventListeners(elements, fieldsToUse, accountLabel) {
 }
 
 function addInitialRow(elements, fieldsToUse, accountLabel) {
+	console.log("Adding initial row with fieldsToUse:", fieldsToUse, "and accountLabel:", accountLabel);
+
 	const rowDiv = createRowContent(fieldsToUse, accountLabel, elements);
 
 	// Use jQuery's append method instead of appendChild
@@ -487,6 +491,8 @@ const fieldCreators = {
 };
 
 function createRowContent(fieldsToUse, accountLabel, elements) {
+	console.log("Creating row content with fieldsToUse:", fieldsToUse, "and accountLabel:", accountLabel);
+
     const rowDiv = document.createElement("div");
     rowDiv.className = "row";
     const rowNumber = document.createElement("span");
@@ -554,6 +560,7 @@ function createRowContent(fieldsToUse, accountLabel, elements) {
 
     // Trigger the visibility update initially with an empty value
     updateBeneficiaryVisibility(rowDiv, "");
+    console.log("Created row content:", rowDiv);
 
     return rowDiv;
 }
