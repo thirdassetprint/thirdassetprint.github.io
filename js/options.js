@@ -11,7 +11,7 @@ const optionsData = {
 	],
 	Retirement: [{ text: "Traditional IRA" }, { text: "Roth IRA" }, { text: "Rollover IRA" }, { text: "SEP IRA" }, { text: "SIMPLE IRA" }, { text: "IRA BDA" }, { text: "Roth IRA BDA" }, { text: "401(k) Plan" }, { text: "Solo 401(k)/Individual 401(k)" }, { text: "Profit-Sharing Plan" }, { text: "Defined Benefit Plan" }, { text: "403(b) Plan" }, { text: "457 Plan" }, { text: "Thrift Savings Plan (TSP)" }],
 	"Accounts for Minors": [{ text: "Uniform Gifts to Minors Act (UGMA)" }, { text: "Uniform Transfers to Minors Act (UTMA)" }, { text: "529" }],
-	"Business & Trust": [{ text: "Trust Under Agreement" }, { text: "Trust Under Will" }, { text: "Corporation" }, { text: "Limited Liability Company (LLC)" }, { text: "Non-Prototype" }],
+	"Business & Trust Accounts": [{ text: "Trust Under Agreement" }, { text: "Trust Under Will" }, { text: "Corporation" }, { text: "Limited Liability Company (LLC)" }, { text: "Non-Prototype" }],
 	Insurance: [{ text: "Life Insurance" }, { text: "Annuity" }],
 	"Important Legal Documents": [{ text: "Last Will and Testament" }, { text: "Trust Agreement" }, { text: "Durable Power of Attorney" }, { text: "Healthcare Power of Attorney" }, { text: "Tax Returns" }],
 };
@@ -54,7 +54,7 @@ function getBypassProbate(accountType, registrationType, hasBeneficiary) {
 		case "Insurance":
 			return hasBeneficiary;
 		case "Accounts for Minors":
-		case "Business & Trust":
+		case "Business & Trust Accounts":
 			return true;
 		case "Important Legal Documents":
 			return "N/A";
