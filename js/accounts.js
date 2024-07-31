@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Call this function when the widget is ready
 	JFCustomWidget.subscribe("ready", function (data) {
-		console.log("JFCustomWidget is ready with data:", data);
+		console.log("JFCustomWidget subscribe is ready with data:", data);
 		initializeWidget(data);
 	});
 
