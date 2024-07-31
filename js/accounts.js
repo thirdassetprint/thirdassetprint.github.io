@@ -5,27 +5,70 @@ let globalElements;
 let globalFieldsToUse;
 
 document.addEventListener("DOMContentLoaded", function () {
-	function initializeWidget(data) {
-		console.log("Initializing widget with data:", data);
 
+	function getFieldValue(fieldId) {
+		return new Promise((resolve) => {
+			JFCustomWidget.getFieldsValueById(fieldId, (response) => {
+				resolve(response.value);
+			});
+		});
+	}
+	
+	async function initializeWidget(data) {
+		console.log("Initializing widget with data:", data);
+	
 		const $widgetContainer = $("#widgetContainer");
 		const elements = initializeElements($widgetContainer);
 		if (!elements) {
 			console.error("Failed to initialize elements for container", $widgetContainer);
 			return;
 		}
-
+	
 		globalElements = elements; // Set the global elements
-
+	
 		const config = configureWidget(elements);
 		if (!config) {
 			console.error("Failed to configure widget for elements", elements);
 			return;
 		}
-
+	
 		globalFieldsToUse = config.fieldsToUse; // Set the global fieldsToUse
+	
+		// Fetch first name, middle initial, last name, and suffix
+		const firstName = await getFieldValue("q31_FormFillerName[first]");
+		const middleInitial = await getFieldValue("q31_FormFillerName[middle]");
+		const lastName = await getFieldValue("q31_FormFillerName[last]");
+		const suffix = await getFieldValue("q31_FormFillerName[suffix]");
 
+		// Add console log here
+		console.log("Name values:", { firstName, middleInitial, lastName, suffix });
+
+	
+		// Construct the full name
+		let fullName = `${firstName || ''} ${middleInitial || ''} ${lastName || ''}`.trim();
+		if (suffix) {
+			fullName += `, ${suffix}`;
+		}
+	
+		// Modify the config or elements as needed with the fetched values
+		if (fullName) {
+			config.defaultAccountName = `${fullName}'s Account`;
+		}
+
+		console.log("Constructed names:", { fullName, defaultAccountName: config.defaultAccountName });
+	
 		setupWidget($widgetContainer, elements, config, data);
+	
+		// Add event listener for the new checkbox
+		$(elements.dataContainer).on('change', 'input[name^="sameAsName"]', function() {
+			const row = $(this).closest('.row');
+			const titleInput = row.find('input[name^="title"]');
+			if (this.checked) {
+				titleInput.val(config.defaultAccountName).prop('disabled', true);
+			} else {
+				titleInput.prop('disabled', false);
+			}
+		});
 	}
 
 	// Call this function when the widget is ready
@@ -444,68 +487,75 @@ const fieldCreators = {
 };
 
 function createRowContent(fieldsToUse, accountLabel, elements) {
-	const rowDiv = document.createElement("div");
-	rowDiv.className = "row";
-	const rowNumber = document.createElement("span");
-	rowNumber.className = "row-number";
-	const rowLabel = fieldsToUse.uiText.rowLabel;
-	const rowIndex = elements.dataContainer.children().length + 1;
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "row";
+    const rowNumber = document.createElement("span");
+    rowNumber.className = "row-number";
+    const rowLabel = fieldsToUse.uiText.rowLabel;
+    const rowIndex = elements.dataContainer.children().length + 1;
 
-	rowNumber.textContent = `${accountLabel} ${rowIndex}`;
+    rowNumber.textContent = `${accountLabel} ${rowIndex}`;
+    rowDiv.appendChild(rowNumber);
 
-	rowDiv.appendChild(rowNumber);
+    if (accountLabel === "Business & Trust Accounts") {
+        fieldsToUse.fields = fieldsToUse.fields.filter((field) => !["beneficiaryLabel", "beneficiaryYN", "beneficiaryName", "beneficiaryPhoneNumber"].includes(field.name));
+    }
 
-	if (accountLabel === "Business & Trust Accounts") {
-		fieldsToUse.fields = fieldsToUse.fields.filter((field) => !["beneficiaryLabel", "beneficiaryYN", "beneficiaryName", "beneficiaryPhoneNumber"].includes(field.name));
-	}
+    fieldsToUse.fields.forEach((field) => {
+        const creator = fieldCreators[field.type] || fieldCreators.default;
+        let element;
 
-	fieldsToUse.fields.forEach((field) => {
-		const creator = fieldCreators[field.type] || fieldCreators.default;
-		let element;
+        if (field.type === "label") {
+            element = creator(field);
+            if (field.name === "beneficiaryLabel") {
+                element.classList.add("hidden");
+            }
+        } else if (field.type === "select") {
+            creator(field, rowDiv, accountLabel);
+            return; // createSelectField handles its own appending
+        } else if (field.type === "fancyRadio") {
+            element = creator(field, rowDiv, rowIndex, elements);
+            if (field.name === "beneficiaryYN") {
+                element.classList.add("hidden");
+            }
+        } else if (field.type === "checkbox" && field.name === "sameAsName") {
+            element = creator(field);
+            // Show checkbox only for Taxable Investment and Retirement accounts
+            if (["Taxable Investment", "Retirement"].includes(accountLabel)) {
+                element.classList.remove("hidden");
+            } else {
+                element.classList.add("hidden");
+            }
+        } else {
+            element = creator(field);
+            if (field.name === "beneficiaryName" || field.name === "beneficiaryPhoneNumber") {
+                element.classList.add("hidden");
+            }
+        }
 
-		if (field.type === "label") {
-			element = creator(field);
-			if (field.name === "beneficiaryLabel") {
-				element.classList.add("hidden");
-			}
-		} else if (field.type === "select") {
-			creator(field, rowDiv, accountLabel);
-			return; // createSelectField handles its own appending
-		} else if (field.type === "fancyRadio") {
-			element = creator(field, rowDiv, rowIndex, elements);
-			if (field.name === "beneficiaryYN") {
-				element.classList.add("hidden");
-			}
-		} else {
-			element = creator(field);
-			if (field.name === "beneficiaryName" || field.name === "beneficiaryPhoneNumber") {
-				element.classList.add("hidden");
-			}
-		}
+        if (element) {
+            rowDiv.appendChild(element);
+        }
+    });
 
-		if (element) {
-			rowDiv.appendChild(element);
-		}
-	});
+    // Add event listener to the registration select field
+    const registrationSelect = rowDiv.querySelector('select[name="registration"]');
+    if (registrationSelect) {
+        registrationSelect.addEventListener("change", function () {
+            updateBeneficiaryVisibility(rowDiv, this.value);
+            toggleOtherRegistration(rowDiv, this.value === "Other");
 
-	// Add event listener to the registration select field
-	const registrationSelect = rowDiv.querySelector('select[name="registration"]');
-	if (registrationSelect) {
-		registrationSelect.addEventListener("change", function () {
-			updateBeneficiaryVisibility(rowDiv, this.value);
-			toggleOtherRegistration(rowDiv, this.value === "Other");
+            // Log bypassProbate when form is loaded
+            const hasBeneficiary = rowDiv.querySelector('input[name^="beneficiaryYN"]:checked')?.value === "Yes";
+            const bypassProbate = getBypassProbate(accountLabel, this.value, hasBeneficiary);
+            console.log(`Form loaded - bypassProbate: ${bypassProbate}`);
+        });
+    }
 
-			// Log bypassProbate when form is loaded
-			const hasBeneficiary = rowDiv.querySelector('input[name^="beneficiaryYN"]:checked')?.value === "Yes";
-			const bypassProbate = getBypassProbate(accountLabel, this.value, hasBeneficiary);
-			console.log(`Form loaded - bypassProbate: ${bypassProbate}`);
-		});
-	}
+    // Trigger the visibility update initially with an empty value
+    updateBeneficiaryVisibility(rowDiv, "");
 
-	// Trigger the visibility update initially with an empty value
-	updateBeneficiaryVisibility(rowDiv, "");
-
-	return rowDiv;
+    return rowDiv;
 }
 
 // Row Manipulation Functions
