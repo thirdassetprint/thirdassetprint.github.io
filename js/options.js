@@ -29,12 +29,15 @@ const optionsDataWithOther = addOtherOption(optionsData);
 
 // Modify the getOptions function to use optionsDataWithOther
 function getOptions(accountLabel) {
-	const options = optionsDataWithOther[accountLabel];
-	if (options) {
-		return { accountLabel, options };
-	} else {
-		return { accountLabel: "", options: [] };
-	}
+    console.log("Getting options for:", accountLabel);
+    const options = optionsDataWithOther[accountLabel];
+    console.log("Options found:", options);
+    if (options) {
+        return { accountLabel, options };
+    } else {
+        console.log("No options found for:", accountLabel);
+        return { accountLabel: "", options: [] };
+    }
 }
 
 // Modify getBypassProbate to handle "Other" option
