@@ -455,7 +455,7 @@ function createRowContent(fieldsToUse, accountLabel, elements) {
 
 	rowDiv.appendChild(rowNumber);
 
-	if (accountLabel === "Business & Trust Accounts") {
+	if (accountLabel === "Business & Trust") {
 		fieldsToUse.fields = fieldsToUse.fields.filter((field) => !["beneficiaryLabel", "beneficiaryYN", "beneficiaryName", "beneficiaryPhoneNumber"].includes(field.name));
 	}
 
