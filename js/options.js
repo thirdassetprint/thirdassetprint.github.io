@@ -191,6 +191,8 @@ legalDocumentFields.uiText.rowLabel = "Important Legal Document";
 legalDocumentFields.fields.find((f) => f.name === "accountNumber").maskInput = false;
 
 function initializeWidgetSettings() {
+	console.log("Initializing widget settings...");
+
     window.widgetSettingsMapping = {
         account: accountFields,
         insurance: insuranceFields,
@@ -202,8 +204,10 @@ function initializeWidgetSettings() {
         important_legal_documents: legalDocumentFields
     };
     
-    console.log("2Widget settings mapping initialized:", Object.keys(window.widgetSettingsMapping));
+    console.log("Widget settings mapping initialized:", Object.keys(window.widgetSettingsMapping));
+    console.log("Full widget settings mapping:", window.widgetSettingsMapping);
 }
 
 // Call this function when the script loads
 initializeWidgetSettings();
+console.log("options.js execution completed");
