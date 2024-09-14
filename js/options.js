@@ -202,7 +202,7 @@ function initializeWidgetSettings() {
         important_legal_documents: legalDocumentFields
     };
     
-    console.log("Widget settings mapping initialized:", Object.keys(window.widgetSettingsMapping));
+    console.log("2Widget settings mapping initialized:", Object.keys(window.widgetSettingsMapping));
 }
 
 // Call this function when the script loads
