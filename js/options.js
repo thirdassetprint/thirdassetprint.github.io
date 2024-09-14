@@ -1,5 +1,3 @@
-
-
 const optionsData = {
 	"Taxable Investment": [
 		{ text: "Individual", hideBeneficiary: true, bypassProbate: false },
@@ -192,10 +190,20 @@ legalDocumentFields.fields[12].class = "hidden"; // Hide beneficiaryPhoneNumber
 legalDocumentFields.uiText.rowLabel = "Important Legal Document";
 legalDocumentFields.fields.find((f) => f.name === "accountNumber").maskInput = false;
 
-const widgetSettingsMapping = {
-	account: accountFields,
-	insurance: insuranceFields,
-	"legal document": legalDocumentFields,
-};
+function initializeWidgetSettings() {
+    window.widgetSettingsMapping = {
+        account: accountFields,
+        insurance: insuranceFields,
+        legal_document: legalDocumentFields,
+        accounts_for_minors: accountFields,
+        taxable_investment: accountFields,
+        retirement: accountFields,
+        business_trust_accounts: accountFields,
+        important_legal_documents: legalDocumentFields
+    };
+    
+    console.log("Widget settings mapping initialized:", Object.keys(window.widgetSettingsMapping));
+}
 
-window.widgetSettingsMapping = widgetSettingsMapping;
+// Call this function when the script loads
+initializeWidgetSettings();
