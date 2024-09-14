@@ -1,3 +1,5 @@
+
+
 // Global variables
 let allFieldsRequired = true;
 let isWidgetValid = false;
@@ -6,6 +8,7 @@ let globalFieldsToUse;
 
 document.addEventListener("DOMContentLoaded", function () {
 	function initializeWidget(data) {
+		console.log("Widget settings:", JFCustomWidget.getWidgetSetting("accountLabel"));
 		console.log("Initializing widget with data:", data);
 
 		const $widgetContainer = $("#widgetContainer");
@@ -125,12 +128,14 @@ function initializeElements(container) {
 
 function configureWidget(elements) {
 	const accountLabel = JFCustomWidget.getWidgetSetting("accountLabel");
+	console.log("Configuring widget for:", accountLabel);
 	if (!accountLabel) {
 		console.error("Account Label is not set");
 		return null;
 	}
 
 	const fieldsToUse = getFieldsToUse(accountLabel);
+	console.log("Fields to use:", fieldsToUse);
 	if (!fieldsToUse) {
 		console.error("No fields configuration found for the given account label.");
 		return null;
@@ -164,6 +169,8 @@ function addInitialRow(elements, fieldsToUse, accountLabel) {
 // Determine which fields to use based on the accountLabel
 function getFieldsToUse(accountLabel) {
 	const { widgetSettingsMapping } = window;
+	console.log("Getting fields for:", accountLabel);
+	console.log("Available mappings:", Object.keys(widgetSettingsMapping));
 	return widgetSettingsMapping[accountLabel.toLowerCase()] || widgetSettingsMapping["account"];
 }
 
@@ -444,6 +451,9 @@ const fieldCreators = {
 };
 
 function createRowContent(fieldsToUse, accountLabel, elements) {
+	console.log("Creating row for:", accountLabel);
+	console.log("Fields to use:", fieldsToUse);
+
 	const rowDiv = document.createElement("div");
 	rowDiv.className = "row";
 	const rowNumber = document.createElement("span");
