@@ -1,3 +1,7 @@
+console.log("Widget settings:", JFCustomWidget.getWidgetSetting("accountLabel"));
+console.log("Creating row for:", accountLabel);
+console.log("Fields to use:", fieldsToUse);
+
 const optionsData = {
 	"Taxable Investment": [
 		{ text: "Individual", hideBeneficiary: true, bypassProbate: false },
