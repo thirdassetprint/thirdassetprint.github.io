@@ -172,6 +172,7 @@ legalDocumentFields.fields.splice(2, 0, {
   class: "half-width",
 });
 legalDocumentFields.fields[3].placeholder = "Document Location";
+legalDocumentFields.fields[3].class = "half-width";
 legalDocumentFields.fields[4].placeholder = "Attorney/CPA Name";
 legalDocumentFields.fields[5].placeholder = "Attorney/CPA Phone Number";
 legalDocumentFields.fields[5].type = "tel";
