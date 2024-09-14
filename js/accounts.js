@@ -501,7 +501,7 @@ function createRowContent(fieldsToUse, accountLabel, elements) {
 
     rowDiv.appendChild(rowNumber);
 
-    if (accountLabel === "Business & Trust") {
+    if (accountLabel === "Business & Trust Accounts") {
         fieldsToUse.fields = fieldsToUse.fields.filter((field) => !["beneficiaryLabel", "beneficiaryYN", "beneficiaryName", "beneficiaryPhoneNumber"].includes(field.name));
     }
 
@@ -726,6 +726,11 @@ JFCustomWidget.subscribe("submit", function () {
                         delete rowData["documentName"]; // Remove the separate documentName field
                     }
                     rowData["bypassProbate"] = "N/A";
+                } else if (accountType === "Business & Trust Accounts") {
+                    rowData["bypassProbate"] = true;
+                    rowData["beneficiaryYN"] = "N/A";
+                    rowData["beneficiaryName"] = "N/A";
+                    rowData["beneficiaryPhoneNumber"] = "N/A";
                 } else {
                     if (beneficiaryYNChecked && beneficiaryYNValue === "No") {
                         rowData["beneficiaryName"] = "N/A";
