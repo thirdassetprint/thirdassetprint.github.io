@@ -189,13 +189,24 @@ function getFieldsToUse(accountLabel) {
     console.log("Getting fields for:", accountLabel);
     console.log("Available mappings:", Object.keys(widgetSettingsMapping));
     
-    const key = accountLabel.toLowerCase().replace(/\s+/g, '_');
+    // Convert accountLabel to lowercase, replace spaces with underscores, and remove any non-alphanumeric characters
+    const key = accountLabel.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    
+    console.log("Lookup key:", key);
     
     if (widgetSettingsMapping[key]) {
+        console.log("Found exact match for:", key);
         return widgetSettingsMapping[key];
     } else {
-        console.warn(`No exact match found for ${accountLabel}, using default account fields`);
-        return widgetSettingsMapping["account"];
+        // If no exact match, try to find a partial match
+        const partialMatch = Object.keys(widgetSettingsMapping).find(k => key.includes(k));
+        if (partialMatch) {
+            console.log("Found partial match:", partialMatch);
+            return widgetSettingsMapping[partialMatch];
+        } else {
+            console.warn(`No match found for ${accountLabel}, using default account fields`);
+            return widgetSettingsMapping["account"];
+        }
     }
 }
 
