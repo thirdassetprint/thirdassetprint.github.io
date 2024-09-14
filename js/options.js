@@ -171,6 +171,8 @@ legalDocumentFields.fields.splice(2, 0, {
   placeholder: "Document Name",
   class: "half-width",
 });
+// Change the placeholder for the registration field
+legalDocumentFields.fields.find(f => f.name === "registration").placeholder = "Select Document Type";
 legalDocumentFields.fields[3].placeholder = "Document Location";
 legalDocumentFields.fields[3].class = "half-width";
 legalDocumentFields.fields[4].placeholder = "Attorney/CPA Name";
