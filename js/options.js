@@ -168,7 +168,7 @@ insuranceFields.uiText.rowLabel = "Policy";
 const legalDocumentFields = JSON.parse(JSON.stringify(baseFields));
 legalDocumentFields.fields.splice(2, 0, {
   name: "documentName",
-  placeholder: "Document Name",
+  placeholder: "Document Title",
   class: "half-width",
 });
 // Change the placeholder for the registration field
