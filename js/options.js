@@ -1,4 +1,10 @@
 const optionsData = {
+	"Checking and Savings Accounts": [
+        { text: "Individual", hideBeneficiary: true, bypassProbate: false },
+        { text: "Joint Account with Rights of Survivorship (JTWRS)", hideBeneficiary: true, bypassProbate: true },
+        { text: "Payable on Death (POD)", bypassProbate: true },
+        { text: "Corporate", hideBeneficiary: true, bypassProbate: false }
+    ],
 	"Taxable Investment": [
 		{ text: "Individual", hideBeneficiary: true, bypassProbate: false },
 		{ text: "Joint Tenants with Rights of Survivorship", hideBeneficiary: true, bypassProbate: true },
@@ -40,7 +46,7 @@ function getOptions(accountLabel) {
     }
 }
 
-// Modify getBypassProbate to handle "Other" option
+// Modify getBypassProbate to handle the new account type
 function getBypassProbate(accountType, registrationType, hasBeneficiary) {
 	if (registrationType === "Other") {
 		return hasBeneficiary;
@@ -59,6 +65,8 @@ function getBypassProbate(accountType, registrationType, hasBeneficiary) {
 		case "Important Legal Documents":
 			return "N/A";
 		case "Taxable Investment":
+			return option.bypassProbate || false;
+		case "Checking and Savings Accounts":
 			return option.bypassProbate || false;
 		default:
 			return false;
@@ -193,6 +201,16 @@ legalDocumentFields.fields[12].class = "hidden"; // Hide beneficiaryPhoneNumber
 legalDocumentFields.uiText.rowLabel = "Important Legal Document";
 legalDocumentFields.fields.find((f) => f.name === "accountNumber").maskInput = false;
 
+// Create checkingSavingsFields
+const checkingSavingsFields = JSON.parse(JSON.stringify(baseFields));
+checkingSavingsFields.fields = checkingSavingsFields.fields.filter(field => 
+    ["registration", "otherRegistration", "title", "companyName", "accountNumber", "beneficiaryLabel", "beneficiaryYN", "beneficiaryName", "beneficiaryPhoneNumber"].includes(field.name)
+);
+checkingSavingsFields.fields[2].placeholder = "Account Title";
+checkingSavingsFields.fields[3].placeholder = "Bank Name";
+checkingSavingsFields.fields[4].placeholder = "Account Number";
+checkingSavingsFields.uiText.rowLabel = "Checking/Savings Account";
+
 function initializeWidgetSettings() {
 	console.log("Initializing widget settings...");
 
@@ -204,7 +222,8 @@ function initializeWidgetSettings() {
         taxable_investment: accountFields,
         retirement: accountFields,
         business_trust_accounts: accountFields,
-        important_legal_documents: legalDocumentFields
+        important_legal_documents: legalDocumentFields,
+        checking_and_savings_accounts: checkingSavingsFields
     };
     
     console.log("Widget settings mapping initialized:", Object.keys(window.widgetSettingsMapping));
