@@ -114,7 +114,11 @@ jsonData.forEach((data) => {
         Object.keys(groupedData).forEach(key => {
             let value = account[key] || '';
             if (account.accountType === 'Important Legal Documents') {
-                if (['value', 'beneficiaryYN', 'beneficiaryName', 'beneficiaryPhoneNumber', 'bypassProbate'].includes(key)) {
+                if (key === 'title') {
+                    value = account['documentTitle'] || ''; // Use documentTitle for the title field
+                } else if (key === 'beneficiaryYN') {
+                    value = account['documentLocation'] || ''; // Use documentLocation for the beneficiaryYN field
+                } else if (['value', 'beneficiaryName', 'beneficiaryPhoneNumber', 'bypassProbate'].includes(key)) {
                     value = ''; // Set these fields to empty for Legal Documents
                 }
             } else if (key === 'bypassProbate') {
