@@ -25,11 +25,11 @@ const optionsData = {
 // Define custom placeholders for otherRegistration
 const otherRegistrationPlaceholders = {
     "Checking and Savings Accounts": "Other Checking or Savings Account Type",
-    "Taxable Investment": "Other Investment Account Type",
+    "Taxable Investment": "Other Taxable Investment Account Type",
     "Retirement": "Other Retirement Account Type",
-    "Accounts for Minors": "Other Account Type for Minors",
+    "Accounts for Minors": "Other Account for Minors Type",
     "Business & Trust Accounts": "Other Business or Trust Account Type",
-    "Insurance": "Other Insurance Type",
+    "Insurance": "Other Insurance Policy Type",
     "Important Legal Documents": "Other Legal Document Type"
 };
 

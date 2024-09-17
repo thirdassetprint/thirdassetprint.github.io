@@ -33,17 +33,15 @@ const customInsuranceLabels = {
 };
 
 const legalDocumentLabels = {
-    ...customLabels,
+    rowIndex: '#',
+    accountType: 'Account Type',
+    registration: 'Registration',
     title: 'Document Location',
     companyName: 'Attorney/CPA Name',
     accountNumber: 'Attorney/CPA Phone',
     advisorName: 'Executor/Trustee Name',
-    advisorPhoneNumber: 'Executor/Trustee Phone',
-    value: '',
-    beneficiaryYN: '',
-    beneficiaryName: '',
-    beneficiaryPhoneNumber: '',
-    bypassProbate: ''
+    advisorPhoneNumber: 'Executor/Trustee Phone'
+    // Removed: value, beneficiaryYN, beneficiaryName, beneficiaryPhoneNumber, bypassProbate
 };
 
 const thirdExecutorLabels = {
@@ -101,14 +99,14 @@ jsonData.forEach((data) => {
         
         Object.keys(groupedData).forEach(key => {
             let value = account[key];
-            if (key === 'bypassProbate') {
-                if (account.accountType === 'Legal Document') {
-                    value = '';
+            if (account.accountType === 'Legal Document') {
+                if (['value', 'beneficiaryYN', 'beneficiaryName', 'beneficiaryPhoneNumber', 'bypassProbate'].includes(key)) {
+                    value = ''; // Set these fields to empty for Legal Documents
                 } else {
-                    value = account[key] === false ? inputData.unchecked : (account[key] === true ? inputData.checked : '');
+                    value = account[key] || '';
                 }
-            } else if (account.accountType === 'Legal Document' && (key === 'value' || key.startsWith('beneficiary'))) {
-                value = '';
+            } else if (key === 'bypassProbate') {
+                value = account[key] === false ? inputData.unchecked : (account[key] === true ? inputData.checked : '');
             } else {
                 value = account[key] || '';
             }
