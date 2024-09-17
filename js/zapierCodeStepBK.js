@@ -26,7 +26,8 @@ const customLabels = {
 
 const customInsuranceLabels = {
     ...customLabels,
-	companyName: 'Insurance Company Name',
+    title: 'Policy Title', // Corrected label for Insurance accounts
+    companyName: 'Insurance Company Name',
     accountNumber: 'Policy Number',
     advisorName: 'Agent Name',
     advisorPhoneNumber: 'Agent Phone',
@@ -37,8 +38,8 @@ const legalDocumentLabels = {
     rowIndex: '#',
     accountType: 'Account Type',
     registration: 'Registration',
-    documentTitle: 'Document Title',
-    documentLocation: 'Document Location',
+    documentTitle: 'Document Title',       // Include 'documentTitle'
+    documentLocation: 'Document Location', // Include 'documentLocation'
     companyName: 'Attorney/CPA Name',
     accountNumber: 'Attorney/CPA Phone',
     advisorName: 'Executor/Trustee Name',
@@ -62,15 +63,24 @@ const thirdExecutorLabels = {
     bypassProbate: ''
 };
 
-let groupedData = Object.keys(customLabels).reduce((acc, key) => {
-    acc[key] = [];
-    return acc;
-}, {});
+// Collect all unique keys from all label objects
+const allKeys = new Set([
+    ...Object.keys(customLabels),
+    ...Object.keys(customInsuranceLabels),
+    ...Object.keys(legalDocumentLabels),
+    ...Object.keys(thirdExecutorLabels),
+]);
+
+// Initialize groupedData with all keys
+let groupedData = {};
+allKeys.forEach((key) => {
+    groupedData[key] = [];
+});
 
 function addLabelsForNewType(type) {
     if (!groupedData.accountType.includes(type)) {
         const labels = type === 'Insurance' ? customInsuranceLabels :
-                       type === 'Legal Document' ? legalDocumentLabels :
+                       type === 'Important Legal Documents' ? legalDocumentLabels :
                        type === 'Third Executor' ? thirdExecutorLabels :
                        customLabels;
         Object.keys(groupedData).forEach(key => {
@@ -98,21 +108,15 @@ jsonData.forEach((data) => {
         if (!isFirstAccount) {
             addLabelsForNewType(account.accountType);
         }
-        
+
         Object.keys(groupedData).forEach(key => {
-            let value = account[key];
+            let value = account[key] || '';
             if (account.accountType === 'Important Legal Documents') {
                 if (['value', 'beneficiaryYN', 'beneficiaryName', 'beneficiaryPhoneNumber', 'bypassProbate'].includes(key)) {
                     value = ''; // Set these fields to empty for Legal Documents
-                } else if (key === 'documentTitle' || key === 'documentLocation') {
-                    value = account[key] || ''; // Ensure we capture documentTitle and documentLocation
-                } else {
-                    value = account[key] || '';
                 }
             } else if (key === 'bypassProbate') {
                 value = account[key] === false ? inputData.unchecked : (account[key] === true ? inputData.checked : '');
-            } else {
-                value = account[key] || '';
             }
             groupedData[key].push(value);
         });
@@ -120,7 +124,7 @@ jsonData.forEach((data) => {
         if (accIndex === parsedData.accounts.length - 1) {
             addTwoEmptyRows();
         }
-        
+
         isFirstAccount = false;
     });
 });

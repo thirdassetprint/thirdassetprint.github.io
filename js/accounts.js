@@ -1,4 +1,4 @@
-
+//accounts.js starts here
 
 // Global variables
 let allFieldsRequired = true;

@@ -1,3 +1,5 @@
+//options.js starts here
+
 const optionsData = {
 	"Checking and Savings Accounts": [
         { text: "Individual", hideBeneficiary: true, bypassProbate: false },
