@@ -22,6 +22,17 @@ const optionsData = {
 	"Important Legal Documents": [{ text: "Last Will and Testament" }, { text: "Trust Agreement" }, { text: "Durable Power of Attorney" }, { text: "Healthcare Power of Attorney" }, { text: "Tax Returns" }],
 };
 
+// Define custom placeholders for otherRegistration
+const otherRegistrationPlaceholders = {
+    "Checking and Savings Accounts": "Other Checking or Savings Account Type",
+    "Taxable Investment": "Other Investment Account Type",
+    "Retirement": "Other Retirement Account Type",
+    "Accounts for Minors": "Other Account Type for Minors",
+    "Business & Trust Accounts": "Other Business or Trust Account Type",
+    "Insurance": "Other Insurance Type",
+    "Important Legal Documents": "Other Legal Document Type"
+};
+
 // Function to add "Other" option to all account types
 function addOtherOption(options) {
 	for (let accountType in options) {
@@ -84,7 +95,9 @@ const baseFields = {
 		},
 		{
 			name: "otherRegistration",
-			placeholder: "Other Registration Type",
+			placeholder: function(accountType) {
+				return otherRegistrationPlaceholders[accountType] || "Other Registration Type";
+			},
 			class: "full-width hidden",
 		},
 		{
@@ -161,6 +174,7 @@ accountFields.fields[3].placeholder = "Firm Name";
 accountFields.fields[4].placeholder = "Account Number";
 accountFields.fields[7].placeholder = "Account Value";
 accountFields.uiText.rowLabel = "Account";
+accountFields.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Taxable Investment"];
 
 // Customize for insuranceFields
 const insuranceFields = JSON.parse(JSON.stringify(baseFields));
@@ -171,6 +185,7 @@ insuranceFields.fields[5].placeholder = "Agent Name";
 insuranceFields.fields[6].placeholder = "Agent Phone Number";
 insuranceFields.fields[7].placeholder = "Policy Value";
 insuranceFields.uiText.rowLabel = "Policy";
+insuranceFields.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Insurance"];
 
 // Customize for legalDocumentFields
 const legalDocumentFields = JSON.parse(JSON.stringify(baseFields));
@@ -200,6 +215,7 @@ legalDocumentFields.fields[11].class = "hidden"; // Hide beneficiaryName
 legalDocumentFields.fields[12].class = "hidden"; // Hide beneficiaryPhoneNumber
 legalDocumentFields.uiText.rowLabel = "Important Legal Document";
 legalDocumentFields.fields.find((f) => f.name === "accountNumber").maskInput = false;
+legalDocumentFields.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Important Legal Documents"];
 
 // Create checkingSavingsFields
 const checkingSavingsFields = JSON.parse(JSON.stringify(baseFields));
@@ -210,6 +226,7 @@ checkingSavingsFields.fields[2].placeholder = "Account Title";
 checkingSavingsFields.fields[3].placeholder = "Bank Name";
 checkingSavingsFields.fields[4].placeholder = "Account Number";
 checkingSavingsFields.uiText.rowLabel = "Checking/Savings Account";
+checkingSavingsFields.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Checking and Savings Accounts"];
 
 function initializeWidgetSettings() {
 	console.log("Initializing widget settings...");
