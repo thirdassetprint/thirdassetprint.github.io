@@ -731,6 +731,24 @@ JFCustomWidget.subscribe("submit", function () {
                     rowData["beneficiaryYN"] = "N/A";
                     rowData["beneficiaryName"] = "N/A";
                     rowData["beneficiaryPhoneNumber"] = "N/A";
+                } else if (accountType === "Checking and Savings Accounts") {
+                    // Set specific fields to "N/A" for Checking and Savings Accounts
+                    rowData["advisorName"] = "N/A";
+                    rowData["advisorPhoneNumber"] = "N/A";
+                    rowData["value"] = "N/A";
+                    
+                    // Handle beneficiary and bypass probate as usual
+                    if (beneficiaryYNChecked && beneficiaryYNValue === "No") {
+                        rowData["beneficiaryName"] = "N/A";
+                        rowData["beneficiaryPhoneNumber"] = "N/A";
+                    } else if (!beneficiaryYNChecked) {
+                        rowData["beneficiaryYN"] = "N/A";
+                        rowData["beneficiaryName"] = "N/A";
+                        rowData["beneficiaryPhoneNumber"] = "N/A";
+                    }
+
+                    const hasBeneficiary = beneficiaryYNValue === "Yes";
+                    rowData["bypassProbate"] = getBypassProbate(accountType, rowData["registration"], hasBeneficiary);
                 } else {
                     if (beneficiaryYNChecked && beneficiaryYNValue === "No") {
                         rowData["beneficiaryName"] = "N/A";
