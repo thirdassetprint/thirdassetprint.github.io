@@ -735,16 +735,16 @@ JFCustomWidget.subscribe("submit", function () {
                 rowData["registration"] = otherRegistration || registrationType;
 
                 if (accountType === "Important Legal Documents") {
-                    // For legal documents, use documentName as the document title
-                    if (rowData["documentName"]) {
-                        rowData["documentTitle"] = rowData["documentName"];
-                        delete rowData["documentName"]; // Remove the separate documentName field
-                    }
-                    // Use the 'title' field for document location
-                    rowData["documentLocation"] = rowData["title"];
-                    delete rowData["title"]; // Remove the 'title' field to avoid confusion
+                    // Keep using 'title' for document title
+                    // Use 'beneficiaryYN' for document location
+                    rowData["beneficiaryYN"] = rowData["documentLocation"] || rowData["title"];
+                    delete rowData["documentLocation"];
+                    delete rowData["documentName"];
                     rowData["bypassProbate"] = "N/A";
-                } else if (accountType === "Business and Trust Accounts") {
+                    // Remove other beneficiary-related fields
+                    delete rowData["beneficiaryName"];
+                    delete rowData["beneficiaryPhoneNumber"];
+                } else if (accountType === "Business & Trust Accounts") {
                     rowData["bypassProbate"] = true;
                     rowData["beneficiaryYN"] = "N/A";
                     rowData["beneficiaryName"] = "N/A";

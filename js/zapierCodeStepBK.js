@@ -1,3 +1,5 @@
+// zapierCodeStepBK.js starts here
+
 const rawResponse = inputData.rawResponse;
 
 const regex = /\{"accounts":\[\{.*?\}\]\}/g;
@@ -26,7 +28,7 @@ const customLabels = {
 
 const customInsuranceLabels = {
     ...customLabels,
-    title: 'Policy Title', // Corrected label for Insurance accounts
+    title: 'Policy Title',  // Change this line
     companyName: 'Insurance Company Name',
     accountNumber: 'Policy Number',
     advisorName: 'Agent Name',
@@ -38,13 +40,13 @@ const legalDocumentLabels = {
     rowIndex: '#',
     accountType: 'Account Type',
     registration: 'Registration',
-    documentTitle: 'Document Title',       // Include 'documentTitle'
-    documentLocation: 'Document Location', // Include 'documentLocation'
+    title: 'Document Title',  // Keep using 'title'
     companyName: 'Attorney/CPA Name',
     accountNumber: 'Attorney/CPA Phone',
     advisorName: 'Executor/Trustee Name',
-    advisorPhoneNumber: 'Executor/Trustee Phone'
-    // Removed: value, beneficiaryYN, beneficiaryName, beneficiaryPhoneNumber, bypassProbate
+    advisorPhoneNumber: 'Executor/Trustee Phone',
+    beneficiaryYN: 'Document Location',  // Use beneficiaryYN for Document Location
+    // Remove other beneficiary-related fields
 };
 
 const thirdExecutorLabels = {
