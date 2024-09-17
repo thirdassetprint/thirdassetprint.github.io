@@ -582,9 +582,24 @@ function removeRow(elements, fieldsToUse, accountLabel) {
     const { errorMessageContainer } = elements;
     const rows = document.querySelectorAll(".row");
     if (rows.length > 1) {
-        const confirmRemove = confirm("Are you sure you want to remove this account?");
+        const lastRow = rows[rows.length - 1];
+        const registrationSelect = lastRow.querySelector('select[name^="registration"]');
+        let accountType = accountLabel;
+
+        // If a registration type is selected, use it for a more specific message
+        if (registrationSelect && registrationSelect.value) {
+            accountType = registrationSelect.value;
+        }
+
+        // Create a user-friendly account type name
+        const friendlyAccountType = accountType.replace(/_/g, ' ')
+                                               .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+
+        const confirmMessage = `Are you sure you want to remove this ${friendlyAccountType}?`;
+        const confirmRemove = confirm(confirmMessage);
+
         if (confirmRemove) {
-            rows[rows.length - 1].remove();
+            lastRow.remove();
             updateIframeHeight(elements);
             setActionButtonText(elements, fieldsToUse, accountLabel);
         }
