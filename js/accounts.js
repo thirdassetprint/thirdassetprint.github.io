@@ -735,11 +735,14 @@ JFCustomWidget.subscribe("submit", function () {
                 rowData["registration"] = otherRegistration || registrationType;
 
                 if (accountType === "Important Legal Documents") {
-                    // For legal documents, use documentName as the title if available
+                    // For legal documents, use documentName as the document title
                     if (rowData["documentName"]) {
-                        rowData["title"] = rowData["documentName"];
+                        rowData["documentTitle"] = rowData["documentName"];
                         delete rowData["documentName"]; // Remove the separate documentName field
                     }
+                    // Use the 'title' field for document location
+                    rowData["documentLocation"] = rowData["title"];
+                    delete rowData["title"]; // Remove the 'title' field to avoid confusion
                     rowData["bypassProbate"] = "N/A";
                 } else if (accountType === "Business & Trust Accounts") {
                     rowData["bypassProbate"] = true;

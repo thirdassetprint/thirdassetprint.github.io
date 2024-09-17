@@ -26,8 +26,9 @@ const customLabels = {
 
 const customInsuranceLabels = {
     ...customLabels,
+	companyName: 'Insurance Company Name',
     accountNumber: 'Policy Number',
-    advisorName: 'Policy Name',
+    advisorName: 'Agent Name',
     advisorPhoneNumber: 'Agent Phone',
     value: 'Policy Value',
 };
@@ -36,7 +37,8 @@ const legalDocumentLabels = {
     rowIndex: '#',
     accountType: 'Account Type',
     registration: 'Registration',
-    title: 'Document Location',
+    documentTitle: 'Document Title',
+    documentLocation: 'Document Location',
     companyName: 'Attorney/CPA Name',
     accountNumber: 'Attorney/CPA Phone',
     advisorName: 'Executor/Trustee Name',
@@ -99,9 +101,11 @@ jsonData.forEach((data) => {
         
         Object.keys(groupedData).forEach(key => {
             let value = account[key];
-            if (account.accountType === 'Legal Document') {
+            if (account.accountType === 'Important Legal Documents') {
                 if (['value', 'beneficiaryYN', 'beneficiaryName', 'beneficiaryPhoneNumber', 'bypassProbate'].includes(key)) {
                     value = ''; // Set these fields to empty for Legal Documents
+                } else if (key === 'documentTitle' || key === 'documentLocation') {
+                    value = account[key] || ''; // Ensure we capture documentTitle and documentLocation
                 } else {
                     value = account[key] || '';
                 }
