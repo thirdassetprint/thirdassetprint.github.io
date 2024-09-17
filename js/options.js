@@ -187,6 +187,9 @@ insuranceFields.fields[7].placeholder = "Policy Value";
 insuranceFields.uiText.rowLabel = "Policy";
 insuranceFields.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Insurance"];
 
+// Add this line to change the registration placeholder for insurance
+insuranceFields.fields.find(f => f.name === "registration").placeholder = "Select Policy Type";
+
 // Customize for legalDocumentFields
 const legalDocumentFields = JSON.parse(JSON.stringify(baseFields));
 legalDocumentFields.fields.splice(2, 0, {
