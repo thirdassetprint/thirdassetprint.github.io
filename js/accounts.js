@@ -739,7 +739,6 @@ JFCustomWidget.subscribe("submit", function () {
                     // Use 'beneficiaryYN' for document location
                     rowData["beneficiaryYN"] = rowData["documentLocation"] || rowData["title"];
                     delete rowData["documentLocation"];
-                    delete rowData["documentName"];
                     rowData["bypassProbate"] = "N/A";
                     // Remove other beneficiary-related fields
                     delete rowData["beneficiaryName"];
