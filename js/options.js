@@ -178,6 +178,18 @@ accountFields.fields[7].placeholder = "Account Value";
 accountFields.uiText.rowLabel = "Account";
 accountFields.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Taxable Investment"];
 
+// Customize for accountforminor
+const accountforminor = JSON.parse(JSON.stringify(baseFields));
+accountforminor.fields[2].placeholder = "Account Title (Include Minor's Name)";
+accountforminor.fields[3].placeholder = "Firm Name";
+accountforminor.fields[4].placeholder = "Account Number";
+accountforminor.fields[7].placeholder = "Account Value";
+accountforminor.fields[8].text = "Is there a Successor Custodian/Owner?";
+accountforminor.fields[10].placeholder = "Successor Custodian/Owner Name";
+accountforminor.fields[11].placeholder = "Successor Custodian/Owner Phone Number";
+accountforminor.uiText.rowLabel = "Account";
+accountforminor.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Taxable Investment"];
+
 // Customize for insuranceFields
 const insuranceFields = JSON.parse(JSON.stringify(baseFields));
 insuranceFields.fields[2].placeholder = "Policy Title";
@@ -240,7 +252,7 @@ function initializeWidgetSettings() {
         account: accountFields,
         insurance: insuranceFields,
         legal_document: legalDocumentFields,
-        accounts_for_minors: accountFields,
+        accounts_for_minors: accountforminor,
         taxable_investment: accountFields,
         retirement: accountFields,
         business_trust_accounts: accountFields,
