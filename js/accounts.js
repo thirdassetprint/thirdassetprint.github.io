@@ -327,7 +327,7 @@ function createInputField(field) {
         handleAccountNumberInput(input);
     }
 
-    if (field.name === "value") {
+    if (field.name === "value" || field.name === "value2") {
         input.addEventListener("input", () => (input.value = input.value.replace(/[^0-9.]/g, "")));
         input.addEventListener("blur", () => {
             let value = parseFloat(input.value.replace(/[^0-9.]/g, "")).toFixed(2);
