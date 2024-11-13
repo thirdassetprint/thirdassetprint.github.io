@@ -20,7 +20,7 @@ const optionsData = {
 	Retirement: [{ text: "Traditional IRA" }, { text: "Roth IRA" }, { text: "Rollover IRA" }, { text: "SEP IRA" }, { text: "SIMPLE IRA" }, { text: "IRA BDA" }, { text: "Roth IRA BDA" }, { text: "401(k) Plan" }, { text: "Solo 401(k)/Individual 401(k)" }, { text: "Profit-Sharing Plan" }, { text: "Defined Benefit Plan" }, { text: "403(b) Plan" }, { text: "457 Plan" }, { text: "Thrift Savings Plan (TSP)" }],
 	"Accounts for Minors": [{ text: "Uniform Gifts to Minors Act (UGMA)" }, { text: "Uniform Transfers to Minors Act (UTMA)" }, { text: "529" }],
 	"Business and Trust Accounts": [{ text: "Trust Under Agreement" }, { text: "Trust Under Will" }, { text: "Corporation" }, { text: "Limited Liability Company (LLC)" }, { text: "Non-Prototype" }],
-	Insurance: [{ text: "Life Insurance" }, { text: "Annuity" }],
+	Insurance: [{ text: "Whole Life" }, { text: "Term Life" },{ text: "Universal Life" },{ text: "Variable Life" }],
 	"Important Legal Documents": [{ text: "Last Will and Testament" }, { text: "Trust Agreement" }, { text: "Durable Power of Attorney" }, { text: "Healthcare Power of Attorney" }, { text: "Tax Returns" }],
 };
 
@@ -197,7 +197,12 @@ insuranceFields.fields[3].placeholder = "Insurance Company Name";
 insuranceFields.fields[4].placeholder = "Policy or Account Number";
 insuranceFields.fields[5].placeholder = "Agent Name";
 insuranceFields.fields[6].placeholder = "Agent Phone Number";
-insuranceFields.fields[7].placeholder = "Policy Value";
+insuranceFields.fields[7].placeholder = "Policy Cash Value (N/A for Term Life)";
+insuranceFields.fields.splice(7, 0, {
+	name: "value2",
+	placeholder: "Death Benefit",
+	class: "full-width",
+  });
 insuranceFields.uiText.rowLabel = "Policy";
 insuranceFields.fields.find(f => f.name === "otherRegistration").placeholder = otherRegistrationPlaceholders["Insurance"];
 
