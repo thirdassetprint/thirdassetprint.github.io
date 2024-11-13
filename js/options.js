@@ -198,7 +198,7 @@ insuranceFields.fields[4].placeholder = "Policy or Account Number";
 insuranceFields.fields[5].placeholder = "Agent Name";
 insuranceFields.fields[6].placeholder = "Agent Phone Number";
 insuranceFields.fields[7].placeholder = "Policy Cash Value (N/A for Term Life)";
-insuranceFields.fields.splice(7, 0, {
+insuranceFields.fields.splice(8, 0, {
 	name: "value2",
 	placeholder: "Death Benefit",
 	class: "full-width",
