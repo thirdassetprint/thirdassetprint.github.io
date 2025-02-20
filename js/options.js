@@ -194,6 +194,7 @@ function getBypassProbate(accountType, registrationType, hasBeneficiary) {
     case "Insurance":
       return hasBeneficiary;
     case "Accounts for Minors":
+      return hasBeneficiary;
     case "Business and Trust Accounts":
       return true;
     case "Important Legal Documents":
