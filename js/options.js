@@ -239,7 +239,7 @@ const baseFields = {
     },
     {
       name: "accountNumber",
-      placeholder: "Number Placeholder",
+      placeholder: "Last 4 Digits of Account Number",
       class: "half-width",
       type: "text",
       maskInput: true,
@@ -298,7 +298,7 @@ const baseFields = {
 const accountFields = JSON.parse(JSON.stringify(baseFields));
 accountFields.fields[2].placeholder = "Account Title";
 accountFields.fields[3].placeholder = "Firm Name";
-accountFields.fields[4].placeholder = "Account Number";
+accountFields.fields[4].placeholder = "Last 4 Digits of Account Number";
 accountFields.fields[7].placeholder = "Account Value";
 accountFields.uiText.rowLabel = "Account";
 accountFields.fields.find((f) => f.name === "otherRegistration").placeholder =
@@ -308,7 +308,7 @@ accountFields.fields.find((f) => f.name === "otherRegistration").placeholder =
 const accountforminor = JSON.parse(JSON.stringify(baseFields));
 accountforminor.fields[2].placeholder = "Account Title (Include Minor's Name)";
 accountforminor.fields[3].placeholder = "Firm Name";
-accountforminor.fields[4].placeholder = "Account Number";
+accountforminor.fields[4].placeholder = "Last 4 Digits of Account Number";
 accountforminor.fields[7].placeholder = "Account Value";
 accountforminor.fields[8].text = "Is there a Successor Custodian/Owner?";
 accountforminor.fields[10].placeholder = "Successor Custodian/Owner Name";
@@ -322,7 +322,8 @@ accountforminor.fields.find((f) => f.name === "otherRegistration").placeholder =
 const insuranceFields = JSON.parse(JSON.stringify(baseFields));
 insuranceFields.fields[2].placeholder = "Policy Title";
 insuranceFields.fields[3].placeholder = "Insurance Company Name";
-insuranceFields.fields[4].placeholder = "Policy or Account Number";
+insuranceFields.fields[4].placeholder =
+  "Last 4 Digits of Policy/Account Number";
 insuranceFields.fields[5].placeholder = "Agent Name";
 insuranceFields.fields[6].placeholder = "Agent Phone Number";
 insuranceFields.fields[7].placeholder = "Policy Cash Value ($0 for Term Life)";
@@ -391,7 +392,7 @@ checkingSavingsFields.fields = checkingSavingsFields.fields.filter((field) =>
 );
 checkingSavingsFields.fields[2].placeholder = "Account Title";
 checkingSavingsFields.fields[3].placeholder = "Bank Name";
-checkingSavingsFields.fields[4].placeholder = "Account Number";
+checkingSavingsFields.fields[4].placeholder = "Last 4 Digits of Account Number";
 checkingSavingsFields.uiText.rowLabel = "Checking/Savings Account";
 checkingSavingsFields.fields.find(
   (f) => f.name === "otherRegistration"

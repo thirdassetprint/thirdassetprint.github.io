@@ -94,6 +94,12 @@ function collectAllFormsData() {
       .each(function () {
         const field = $(this);
         const name = field.attr("name").replace(/_\d+$/, "");
+        const nameLower = name.toLowerCase();
+        const placeholder = field.attr("placeholder") || "";
+        const isAttorneyCpaPhone =
+          placeholder === "Attorney/CPA Phone Number" &&
+          accountType === "Important Legal Documents";
+        const isPhoneField = field.attr("type") === "tel" || isAttorneyCpaPhone;
 
         if (field.attr("type") === "radio") {
           if (field.is(":checked")) {
@@ -103,6 +109,12 @@ function collectAllFormsData() {
           rowData[name] = field.val();
         } else if (name === "otherRegistration" && field.val()) {
           rowData["registration"] = field.val();
+        } else if (isPhoneField) {
+          rowData[name] = field.val() || "";
+        } else if (nameLower === "accountnumber") {
+          let value = field.val() || "";
+          value = value.replace(/[^0-9a-zA-Z]/g, "").slice(-4);
+          rowData[name] = value;
         } else {
           rowData[name] = field.val() || "";
         }
@@ -293,6 +305,13 @@ function populateWidgetFromSavedData(savedData, elements, config) {
                       maximumFractionDigits: 2,
                     })}`;
               });
+            } else if (isAccountNumberField(key)) {
+              // Ensure account/policy numbers are always limited to last 4 digits when loading saved data
+              let value = account[key].replace(/[^0-9]/g, "");
+              if (value.length > 4) {
+                value = value.slice(-4);
+              }
+              field.value = value;
             } else {
               field.value = account[key];
             }
@@ -581,8 +600,22 @@ function createInputField(field) {
   if (field.pattern) input.pattern = field.pattern;
   if (field.title) input.title = field.title;
 
+  const isAttorneyCpaPhone =
+    field.placeholder &&
+    field.placeholder === "Attorney/CPA Phone Number" &&
+    JFCustomWidget.getWidgetSetting("accountLabel") ===
+      "Important Legal Documents";
+
   if (field.name === "accountNumber" && field.maskInput) {
     handleAccountNumberInput(input);
+  }
+  const isPhoneField = field.type === "tel" || isAttorneyCpaPhone;
+  const fieldNameLower = field.name.toLowerCase();
+  if (fieldNameLower === "accountnumber" && !isPhoneField) {
+    input.pattern = "[0-9a-zA-Z]{4}";
+    input.title =
+      "Enter exactly 4 characters (last 4 digits/letters of account/policy number)";
+    input.maxLength = 4;
   }
 
   if (field.name === "value" || field.name === "value2") {
@@ -619,18 +652,34 @@ function createInputField(field) {
 }
 
 function handleAccountNumberInput(input) {
-  let fullNumber = "";
+  const isAttorneyCpaPhone =
+    input.placeholder &&
+    input.placeholder === "Attorney/CPA Phone Number" &&
+    JFCustomWidget.getWidgetSetting("accountLabel") ===
+      "Important Legal Documents";
+
+  const isPhoneField = input.type === "tel" || isAttorneyCpaPhone;
+
+  if (isPhoneField) {
+    return;
+  }
+
+  // Immediate cleaning when the field is initialized
+
+  if (input.value) {
+    let value = input.value.replace(/[^0-9a-zA-Z]/g, "");
+    if (value.length > 4) {
+      value = value.slice(-4);
+    }
+    input.value = value;
+  }
 
   input.addEventListener("input", function (e) {
-    // Update the full number
-    fullNumber = this.value;
-
-    // Mask all but last 4 characters
-    if (fullNumber.length > 4) {
-      this.value = "*".repeat(fullNumber.length - 4) + fullNumber.slice(-4);
-    } else {
-      this.value = fullNumber;
+    let value = this.value.replace(/[^0-9a-zA-Z]/g, "");
+    if (value.length > 4) {
+      value = value.slice(-4);
     }
+    this.value = value;
   });
 
   input.addEventListener("focus", function () {
@@ -639,11 +688,18 @@ function handleAccountNumberInput(input) {
   });
 
   input.addEventListener("blur", function () {
-    // Mask again when blurred
-    if (fullNumber.length > 4) {
-      this.value = "*".repeat(fullNumber.length - 4) + fullNumber.slice(-4);
+    const value = this.value.replace(/[^0-9a-zA-Z]/g, "");
+    if (value.length !== 4) {
+      this.classList.add("highlight");
+      // Show validation message
+      const errorMsg = document.createElement("div");
+      errorMsg.className = "error-message";
+      errorMsg.textContent = this.parentNode.appendChild(errorMsg);
+      setTimeout(() => {
+        errorMsg.remove();
+      }, 3000);
     } else {
-      this.value = fullNumber;
+      this.classList.remove("highlight");
     }
   });
 }
@@ -1024,18 +1080,122 @@ function updateIframeHeight(elements) {
 }
 
 JFCustomWidget.subscribe("submit", function () {
+  // Get all necessary references
   const $widgetContainer = $("#widgetContainer");
   const $dataContainer = $widgetContainer.find("#dataContainer");
+  const $errorMessageContainer = $("#errorMessageContainer");
   const isVisible = $widgetContainer.is(":visible");
   const accountType = JFCustomWidget.getWidgetSetting("accountLabel");
 
-  // Get the account label from the widget settings in display format,
-  // then convert it to the submission format.
+  // By default, we assume the form is valid
+  let isFormValid = true;
+  let accountsData = [];
+
+  // Check 1: If widget is not visible - prevent advancing if empty data is required
+  if (!isVisible) {
+    console.log("Widget is not visible, but still requiring data to advance");
+    JFCustomWidget.sendSubmit({
+      valid: false,
+      errorText: "Please fill in the required information before continuing.",
+    });
+    return;
+  }
+
+  // Check 2: If there are no rows in the form, prevent advancing (require at least one row of data)
+  const lastRow = $dataContainer.find(".row").last();
+  if (!lastRow.length) {
+    console.log("No rows found in the form - preventing advancement");
+    setErrorMessage(true, getFieldsToUse(accountType), {
+      container: $widgetContainer,
+      dataContainer: $dataContainer,
+      errorMessageContainer: $errorMessageContainer,
+    });
+
+    if ($errorMessageContainer.length) {
+      $errorMessageContainer.css("display", "block");
+      shakeElement($errorMessageContainer);
+    }
+
+    JFCustomWidget.sendSubmit({
+      valid: false,
+      errorText: "Please add at least one entry before continuing.",
+    });
+    return;
+  }
+
+  // MAIN VALIDATION: Check all visible fields in the last row
+  const visibleFields = lastRow.find("input:not(.hidden), select:not(.hidden)");
+  let hasHighlightedFields = false;
+
+  // Clear previous highlights and check each field
+  visibleFields.each(function () {
+    const field = $(this);
+    const select2Container = field.next(".select2-container");
+
+    // Remove previous highlight
+    field.removeClass("highlight");
+    if (select2Container.length) select2Container.removeClass("highlight");
+
+    // Check if field is empty (except radio buttons)
+    const isEmpty =
+      !field.val() || (field.is("select") && field.val() === null);
+    if (isEmpty && field.attr("type") !== "radio") {
+      isFormValid = false;
+      hasHighlightedFields = true;
+
+      // Highlight error field and make it shake to draw attention
+      field.addClass("highlight");
+      if (select2Container.length) select2Container.addClass("highlight");
+      shakeElement(select2Container.length ? select2Container : field);
+    }
+  });
+
+  // Check if beneficiary question was answered when required
+  const isBeneficiaryAnswered = checkBeneficiaryAnswered(lastRow);
+  if (!isBeneficiaryAnswered) {
+    isFormValid = false;
+  }
+
+  // If there are invalid fields, show error message
+  if (!isFormValid) {
+    setErrorMessage(!isBeneficiaryAnswered, getFieldsToUse(accountType), {
+      container: $widgetContainer,
+      dataContainer: $dataContainer,
+      errorMessageContainer: $errorMessageContainer,
+    });
+
+    // Highlight error message
+    if ($errorMessageContainer.length) {
+      $errorMessageContainer.css("display", "block");
+      shakeElement($errorMessageContainer);
+    }
+
+    // Detailed log for debugging
+    console.log("FORM INVALID - BLOCKING ADVANCEMENT", {
+      hasHighlightedFields,
+      isBeneficiaryAnswered,
+      fields: Array.from(visibleFields).map((f) => ({
+        name: $(f).attr("name"),
+        value: $(f).val(),
+        type: $(f).attr("type"),
+        isEmpty: !$(f).val() || ($(f).is("select") && $(f).val() === null),
+      })),
+    });
+
+    // IMPORTANT: We send valid: false to BLOCK advancement
+    JFCustomWidget.sendSubmit({
+      valid: false,
+      errorText: "Please fill in all required fields before continuing.",
+    });
+    return; // Exit here to avoid additional processing
+  }
+
+  // If we reached here, the form is valid. Let's collect the data.
+  // Convert account type from display format to submission format
   const accountTypeDisplay = JFCustomWidget.getWidgetSetting("accountLabel");
   const accountTypeSubmission = toSubmissionFormat(accountTypeDisplay);
 
-  let accountsData = [];
-
+  // Collect data from all rows
   if (isVisible) {
     const $rows = $dataContainer.find(".row");
     $rows.each(function (index) {
@@ -1147,15 +1307,49 @@ JFCustomWidget.subscribe("submit", function () {
     });
   }
 
+  // Check if we have collected data
   if (accountsData.length > 0) {
+    // Form is valid and has data - allow advancement
+    console.log("FORM VALID - Sending data:", { accountsData });
+
     JFCustomWidget.sendSubmit({
       valid: true,
       value: JSON.stringify({ accounts: accountsData }),
     });
   } else {
+    // Form is valid but has no data - prevent advancement
+    console.log("FORM EMPTY - Blocking advancement");
+
+    // Display error message about no data
+    setErrorMessage(true, getFieldsToUse(accountType), {
+      container: $widgetContainer,
+      dataContainer: $dataContainer,
+      errorMessageContainer: $errorMessageContainer,
+    });
+
+    if ($errorMessageContainer.length) {
+      $errorMessageContainer.css("display", "block");
+      shakeElement($errorMessageContainer);
+    }
+
+    // Block advancement
     JFCustomWidget.sendSubmit({
-      valid: true,
-      value: null,
+      valid: false,
+      errorText: "Please add at least one complete entry before continuing.",
     });
   }
 });
+
+// Utility function to detect account number fields by name
+
+function isAccountNumberField(fieldName) {
+  const name = fieldName.toLowerCase().replace(/_\d+$/, "");
+  if (
+    name === "advisorname" &&
+    JFCustomWidget.getWidgetSetting("accountLabel") ===
+      "Important Legal Documents"
+  ) {
+    return false;
+  }
+  return name === "accountnumber";
+}
